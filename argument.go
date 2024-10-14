@@ -43,6 +43,9 @@ func ArgumentAny(name string, value interface{}) (Argument, error) {
 	case []string:
 		return ArgumentStringSlice(name, v...), nil
 
+	case []any:
+		return ArgumentAnySlice(name, v...), nil
+
 	default:
 		return Argument{}, ArgumentTypeNotSupportedErr{Value: value}
 	}
