@@ -31,9 +31,9 @@ func TestArgumentAny(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, Argument{"arg", argIntSlice([]int{1, 2})}, arg)
 
-	arg, err = ArgumentAny("arg", []any{1, "str", true})
+	arg, err = ArgumentAny("arg", []interface{}{1, "str", true})
 	assert.Nil(t, err)
-	assert.Equal(t, Argument{"arg", argAnySlice([]any{1, "str", true})}, arg)
+	assert.Equal(t, Argument{"arg", argAnySlice([]interface{}{1, "str", true})}, arg)
 
 	// Type Not Supported
 	arg, err = ArgumentAny("arg", 1.1)
@@ -72,7 +72,7 @@ func TestArgumentStringSlice(t *testing.T) {
 
 func TestArgumentAnySlice(t *testing.T) {
 	a := ArgumentAnySlice("blocked", "a", 12, true, " ")
-	assert.Equal(t, Argument{"blocked", argAnySlice([]any{"a", 12, true, " "})}, a)
+	assert.Equal(t, Argument{"blocked", argAnySlice([]interface{}{"a", 12, true, " "})}, a)
 
 	a = ArgumentAnySlice("blocked")
 	assert.Equal(t, Argument{"blocked", argAnySlice(nil)}, a)

@@ -43,7 +43,7 @@ func ArgumentAny(name string, value interface{}) (Argument, error) {
 	case []string:
 		return ArgumentStringSlice(name, v...), nil
 
-	case []any:
+	case []interface{}:
 		return ArgumentAnySlice(name, v...), nil
 
 	default:
@@ -75,7 +75,7 @@ func ArgumentStringSlice(name string, values ...string) Argument {
 	return Argument{name, argStringSlice(values)}
 }
 
-func ArgumentAnySlice(name string, values ...any) Argument {
+func ArgumentAnySlice(name string, values ...interface{}) Argument {
 	return Argument{name, argAnySlice(values)}
 }
 
@@ -193,7 +193,7 @@ func (s argStringSlice) stringChan() <-chan string {
 	return tokenChan
 }
 
-type argAnySlice []any
+type argAnySlice []interface{}
 
 func (s argAnySlice) stringChan() <-chan string {
 	tokenChan := make(chan string)
