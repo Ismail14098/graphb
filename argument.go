@@ -72,6 +72,10 @@ func ArgumentStringSlice(name string, values ...string) Argument {
 	return Argument{name, argStringSlice(values)}
 }
 
+func ArgumentAnySlice(name string, values ...any) Argument {
+	return Argument{name, argAnySlice(values)}
+}
+
 // ArgumentCustomType returns a custom GraphQL type's argument representation, which could be a recursive structure.
 func ArgumentCustomType(name string, values ...Argument) Argument {
 	return Argument{name, argumentSlice(values)}
@@ -179,6 +183,31 @@ func (s argStringSlice) stringChan() <-chan string {
 				tokenChan <- ","
 			}
 			tokenChan <- fmt.Sprintf(`"%s"`, v)
+		}
+		tokenChan <- "]"
+		close(tokenChan)
+	}()
+	return tokenChan
+}
+
+type argAnySlice []any
+
+func (s argAnySlice) stringChan() <-chan string {
+	tokenChan := make(chan string)
+	go func() {
+		tokenChan <- "["
+		for i, v := range s {
+			if i != 0 {
+				tokenChan <- ","
+			}
+			switch v.(type) {
+			case bool:
+				tokenChan <- fmt.Sprintf("%t", v)
+			case int:
+				tokenChan <- fmt.Sprintf(`%v`, v)
+			case string:
+				tokenChan <- fmt.Sprintf(`"%s"`, v)
+			}
 		}
 		tokenChan <- "]"
 		close(tokenChan)
